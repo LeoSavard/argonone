@@ -3,7 +3,7 @@ pre_install() {
   if grep "Raspberry Pi 4" /proc/device-tree/model ; then
     echo "Building New Virtual Environment in /opt/argonone..."
     python -m venv --clear /opt/argonone
-    env CFLAGS="-fcommon" /opt/argonone/bin/python3 -m pip install pysmbus RPi.GPIO
+    env CFLAGS="-fcommon" /opt/argonone/bin/python3 -m pip install smbus2 RPi.GPIO
 
     echo "Enabling i2C..."
     BOOT_CFG="/boot/config.txt"
@@ -37,19 +37,18 @@ pre_install() {
 post_install() {
   echo "Please reboot before first use."
   echo "Configuration file: /etc/argononed.conf"
-  echo "Enable power button and fan control service with: sudo systemctl enable argononed.service"
+  echo "Enable power button and fan control service with: sudo systemctl enable --now argononed.service"
   echo "If you want to: enable_uart=1"
   echo "Put it in /boot/config.txt and remove kgdboc=ttyAMA0,115200 in /boot/cmdline"
   echo "Thanks to thegeek1977 to help patching this"
 }
 
 pre_remove() {
-	systemctl stop argononed.service
-  systemctl deactivate argononed.service
+  systemctl disable --now argononed.service
 }
 
 post_remove() {
 	echo "Removing Virtual Environment in /opt/argonone..."
   rm -rf /opt/argonone
-  echo "Software removed. Please remember to disable I2C if not needed any more"
+  echo "Software removed. Please remember to disable I2C by removing the /boot/config.txt entries if not needed any more"
 }
