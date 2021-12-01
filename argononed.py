@@ -6,7 +6,7 @@
 Argon One Fan and Button Service Daemon
 """
 
-import smbus
+import smbus2
 import RPi.GPIO as GPIO
 import os
 import time
@@ -14,9 +14,9 @@ from threading import Thread
 
 rev = GPIO.RPI_REVISION
 if rev == 2 or rev == 3:
-    bus = smbus.SMBus(1)
+    bus = smbus2.SMBus(1)
 else:
-    bus = smbus.SMBus(0)
+    bus = smbus2.SMBus(0)
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
